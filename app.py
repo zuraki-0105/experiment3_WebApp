@@ -2,10 +2,24 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List, Optional
 
-from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from sqlalchemy import create_engine, MetaData, Table, select, func
 
+# -------------------
+# DB 設定（※パスを合わせる）
+# -------------------
+DATABASE_FILE = "restaurants.db"
+engine = create_engine(
+    f"sqlite:///{DATABASE_FILE}",
+    connect_args={"check_same_thread": False},  # FastAPI で SQLite 使うときおまじない
+)
+metadata = MetaData()
+
+# ETL スクリプトで作ったテーブル構造と合わせる
+restaurants_table = Table(
+    "restaurants",
+    metadata,
+    autoload_with=engine,  # 既存DBからカラム情報を読み込む
+)
 
 # ---------- Pydantic モデル定義 ----------
 
@@ -16,7 +30,7 @@ class Restaurant(BaseModel):#クラス定義
     lng: float  #経度
     address: str    #住所
     segment: str  # "student" / "family" など
-    #business_type: str
+    business_type: str
 
 class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじない
     restaurants: List[Restaurant]
@@ -27,40 +41,12 @@ class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじな
 
 app = FastAPI()
 
-# staticフォルダを公開
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# templatesフォルダをテンプレートとして利用
-templates = Jinja2Templates(directory="templates")
-
-
 
 # 動作確認用
 @app.get("/")
-def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+def root():
+    return {"message": "FastAPI is running!"}
 
-
-
-# とりあえずのダミーデータ（あとでオープンデータに差し替え）
-DUMMY_RESTAURANTS = [
-    Restaurant(
-        id=1,
-        name="ラーメン太郎",
-        lat=36.0641,
-        lng=136.2196,
-        address="福井県福井市中央1-1-1",
-        segment="student",
-    ),
-    Restaurant(
-        id=2,
-        name="ファミリー食堂ハナ",
-        lat=36.0650,
-        lng=136.2200,
-        address="福井県福井市中央2-2-2",
-        segment="family",
-    ),
-]
 
 
 # /restaurants エンドポイント
@@ -70,15 +56,27 @@ def list_restaurants(
     limit: int = 100,   #表示上限
     offset: int = 0,    #どこから表示するか
 ):
-    # segment でフィルタ（指定があれば）
-    filtered = DUMMY_RESTAURANTS
-    if segment is not None:
-        filtered = [r for r in filtered if r.segment == segment]
+    with engine.connect() as conn:
+        # ベースとなる SELECT 文
+        query = select(restaurants_table)
+        count_query = select(func.count()).select_from(restaurants_table)
 
-    # ページング（とりあえず単純にスライス）
-    sliced = filtered[offset : offset + limit]  #上記の条件で整形
+        # segment（業態）でフィルタ
+        if segment is not None:
+            query = query.where(restaurants_table.c.segment == segment)
+            count_query = count_query.where(restaurants_table.c.segment == segment)
 
-    return RestaurantListResponse(  #表示
-        restaurants=sliced,
-        count=len(filtered),
+        # ページング
+        query = query.offset(offset).limit(limit)
+
+        # 実行
+        rows = conn.execute(query).mappings().all()
+        total = conn.execute(count_query).scalar()
+
+    # row は dict っぽいオブジェクトになるので、そのまま展開して Pydantic に渡す
+    restaurants = [Restaurant(**row) for row in rows]
+
+    return RestaurantListResponse(
+        restaurants=restaurants,
+        count=total,
     )
