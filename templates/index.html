@@ -1,37 +1,35 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>飲食店分類マップ</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>飲食店マップ</title>
 
-    <!-- Leaflet（地図ライブラリ） -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
-        integrity="sha256-DvN2a8I+3T9m2w7uJ7mDRbugzuDUFc1l1YI7QtKf5eE=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
-        integrity="sha256-o9N1j7k7YpHB+1jG1AEG2A+Fi7qS2+CA0SjN1w2PzYc=" crossorigin=""></script>
+    <!-- Leaflet CSS（integrityなし） -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
 
-    <!-- CSS（最低限でOK） -->
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- 自作CSS -->
+    <link rel="stylesheet" href="/static/style.css" />
 </head>
-
 <body>
+    <h1>飲食店マップ</h1>
 
-    <h1>飲食店ターゲット分類マップ（福井市）</h1>
-
-    <!-- ▼ フィルタ UI ▼ -->
-    <div id="filters">
-        <label><input type="checkbox" value="student" checked> 学生向け</label>
-        <label><input type="checkbox" value="family" checked> ファミリー向け</label>
-        <label><input type="checkbox" value="business" checked> ビジネスマン向け</label>
-        <label><input type="checkbox" value="cafe" checked> カフェ向け</label>
-        <label><input type="checkbox" value="other" checked> その他</label>
-    </div>
-
-    <!-- ▼ 地図表示部分 ▼ -->
+    <!-- 地図を置く場所 -->
     <div id="map"></div>
 
-    <!-- JavaScript（地図制御） -->
-    <script src="/static/main.js"></script>
+    <!-- フィルタ（必要なら） -->
+    <div id="controls">
+        <label><input type="checkbox" id="filter-student" checked> 学生向け</label>
+        <label><input type="checkbox" id="filter-family" checked> ファミリー向け</label>
+    </div>
 
+    <!-- Leaflet JS（integrityなし） -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- 自作JS -->
+    <script src="/static/main.js"></script>
 </body>
 </html>

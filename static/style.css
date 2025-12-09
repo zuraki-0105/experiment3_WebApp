@@ -1,14 +1,14 @@
 body {
-    font-family: sans-serif;
-    margin: 10px;
-}
-
-#filters {
-    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    margin: 20px;
 }
 
 #map {
-    width: 100%;
     height: 600px;
-    border: 1px solid #333;
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+
+#controls {
+    margin-bottom: 10px;
 }

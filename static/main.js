@@ -1,66 +1,63 @@
-// -------------------------
-// 地図を作成（福井市中心）
-// -------------------------
+// ====== 地図の初期化 ======
 const map = L.map('map').setView([36.0641, 136.2193], 14);
 
-// OpenStreetMap のタイル読み込み
+// Tile （背景地図）
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
 }).addTo(map);
 
-// マーカーを保持するための配列
-let markers = [];
+// マーカーを保存する配列
+let markerList = [];
 
-// -------------------------
-// API から店舗データを取得
-// -------------------------
+
+// ====== /restaurants API からデータ取得 ======
 async function loadRestaurants() {
     const res = await fetch("/restaurants");
     const data = await res.json();
-    return data;
-}
 
-// -------------------------
-// マーカー表示処理
-// -------------------------
-function showMarkers(restaurants) {
-    // 既存マーカー消す
-    markers.forEach(m => map.removeLayer(m));
-    markers = [];
+    const restaurants = data.restaurants;
 
+    console.log("APIから取得したデータ:", restaurants);
+
+    // マーカー作成
     restaurants.forEach(r => {
-        const marker = L.marker([r.latitude, r.longitude])
-            .addTo(map)
-            .bindPopup(`<b>${r.name}</b><br>${r.address ?? ""}<br>カテゴリ: ${r.segment}`);
+        const marker = L.marker([r.lat, r.lng])
+            .bindPopup(`<b>${r.name}</b><br>${r.address}<br>${r.segment}`);
 
-        markers.push(marker);
+        marker.segment = r.segment;  // ← フィルタ用に保存
+
+        marker.addTo(map);
+        markerList.push(marker);
     });
 }
 
-// -------------------------
-// フィルタ適用
-// -------------------------
-function applyFilter(restaurants) {
-    // チェックされたカテゴリを取得
-    const checked = Array.from(document.querySelectorAll("#filters input:checked"))
-        .map(i => i.value);
 
-    // チェックされた segment のみ表示
-    const filtered = restaurants.filter(r => checked.includes(r.segment));
-    showMarkers(filtered);
+// ====== フィルタ処理 ======
+function applyFilter() {
+    const showStudent = document.getElementById("filter-student").checked;
+    const showFamily  = document.getElementById("filter-family").checked;
+
+    markerList.forEach(marker => {
+        const seg = marker.segment;
+
+        // 表示条件
+        const shouldShow =
+            (seg === "student" && showStudent) ||
+            (seg === "family"  && showFamily);
+
+        if (shouldShow) {
+            marker.addTo(map);
+        } else {
+            map.removeLayer(marker);
+        }
+    });
 }
 
-// -------------------------
-// メイン処理
-// -------------------------
-(async function () {
-    const restaurants = await loadRestaurants();
 
-    // 初回表示（全件）
-    showMarkers(restaurants);
+// ====== チェックボックスにイベント追加 ======
+document.getElementById("filter-student").addEventListener("change", applyFilter);
+document.getElementById("filter-family").addEventListener("change", applyFilter);
 
-    // フィルタUIのイベント
-    document.querySelectorAll("#filters input").forEach(cb => {
-        cb.addEventListener("change", () => applyFilter(restaurants));
-    });
-})();
+
+// 初期読み込み
+loadRestaurants();
