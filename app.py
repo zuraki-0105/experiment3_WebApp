@@ -2,6 +2,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List, Optional
 
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
+
 # ---------- Pydantic モデル定義 ----------
 
 class Restaurant(BaseModel):#クラス定義
@@ -11,7 +16,7 @@ class Restaurant(BaseModel):#クラス定義
     lng: float  #経度
     address: str    #住所
     segment: str  # "student" / "family" など
-    business_type: str
+    #business_type: str
 
 class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじない
     restaurants: List[Restaurant]
@@ -22,11 +27,19 @@ class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじな
 
 app = FastAPI()
 
+# staticフォルダを公開
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# templatesフォルダをテンプレートとして利用
+templates = Jinja2Templates(directory="templates")
+
+
 
 # 動作確認用
 @app.get("/")
-def root():
-    return {"message": "FastAPI is running!"}
+def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
 
 
 # とりあえずのダミーデータ（あとでオープンデータに差し替え）
