@@ -51,8 +51,12 @@ with engine.connect() as conn:
                 segment = row.get("業態", "")
                 business_type = row.get("営業の種類", "")
 
-                # --- ⭐ 飲食店営業のみを残すフィルタ ---
+                # 飲食店営業のみを残すフィルタ
                 if business_type not in ["① 飲食店営業", "⑬ その他の食料・飲料販売業"]:
+                    continue
+
+                # 座標が 0 のデータを除外
+                if lat == 0 or lng == 0:
                     continue
 
                 conn.execute(restaurant_temp.insert().values(
