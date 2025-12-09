@@ -15,21 +15,12 @@ venv\Scripts\activate
 （成功するとプロンプトの先頭に (venv) が付く）
 
 
-【3】FastAPI / uvicorn が入っているか確認（必要に応じて）
---------------------------------
-python -m pip show uvicorn
-python -m pip show fastapi
-
-（何も出なければインストール）
-python -m pip install "uvicorn[standard]" fastapi
-
-
-【4】FastAPI を起動する（app.py を実行）
+【3】FastAPI を起動する（app.py を実行）
 --------------------------------
 python -m uvicorn app:app --reload
 
 
-【5】動作確認
+【4】動作確認
 --------------------------------
 ブラウザで以下を開く：
 
@@ -40,7 +31,7 @@ python -m uvicorn app:app --reload
    → Swagger UI（自動ドキュメント）が表示されればOK
 
 
-【6】終了方法
+【5】終了方法
 --------------------------------
 ターミナルで Ctrl + C を押す
 （サーバが停止する）
