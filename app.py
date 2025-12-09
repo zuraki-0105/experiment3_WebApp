@@ -11,6 +11,7 @@ class Restaurant(BaseModel):#クラス定義
     lng: float  #経度
     address: str    #住所
     segment: str  # "student" / "family" など
+    business_type: str
 
 class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじない
     restaurants: List[Restaurant]
