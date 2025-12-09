@@ -4,6 +4,10 @@ from typing import List, Optional
 
 from sqlalchemy import create_engine, MetaData, Table, select, func
 
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 # -------------------
 # DB 設定（※パスを合わせる）
 # -------------------
@@ -41,11 +45,17 @@ class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじな
 
 app = FastAPI()
 
+# staticフォルダを公開
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# templatesフォルダをテンプレートとして利用
+templates = Jinja2Templates(directory="templates")
+
 
 # 動作確認用
 @app.get("/")
-def root():
-    return {"message": "FastAPI is running!"}
+def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 
