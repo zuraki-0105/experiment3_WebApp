@@ -1,0 +1,51 @@
+==============================
+ FastAPI 起動手順（Windows / PowerShell）
+==============================
+
+【1】プロジェクトフォルダへ移動
+--------------------------------
+例：
+cd \\fecscsfs.fecs.eng.w.u-fukui.ac.jp\Home\hb230759\Desktop\実験３web\自由制作\experiment3_WebApp
+
+
+【2】venv を有効化する
+--------------------------------
+venv\Scripts\activate
+
+（成功するとプロンプトの先頭に (venv) が付く）
+
+
+【3】FastAPI / uvicorn が入っているか確認（必要に応じて）
+--------------------------------
+python -m pip show uvicorn
+python -m pip show fastapi
+
+（何も出なければインストール）
+python -m pip install "uvicorn[standard]" fastapi
+
+
+【4】FastAPI を起動する（app.py を実行）
+--------------------------------
+python -m uvicorn app:app --reload
+
+
+【5】動作確認
+--------------------------------
+ブラウザで以下を開く：
+
+ http://127.0.0.1:8000
+   → {"message": "FastAPI is running!"} が出ればOK
+
+ http://127.0.0.1:8000/docs
+   → Swagger UI（自動ドキュメント）が表示されればOK
+
+
+【6】終了方法
+--------------------------------
+ターミナルで Ctrl + C を押す
+（サーバが停止する）
+
+
+==============================
+ これで FastAPI 開発環境の起動は完了！
+==============================
