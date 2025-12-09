@@ -2,7 +2,7 @@ import csv
 from sqlalchemy import create_engine, Table, Column, Integer, String, Float, MetaData, select
 
 # --- 設定 ---
-CSV_RESTAURANT = '18201_food_business_all.csv'
+CSV_RESTAURANT = 'opendata/18201_food_business_all.csv'
 DATABASE_FILE = 'restaurants.db'
 
 # SQLAlchemy setting
@@ -16,7 +16,7 @@ restaurant_temp = Table('restaurant_temp', metadata,
     Column('lng', Float),
     Column('address', String),
     Column('segment', String),
-    Column('business_type', String)   # ← 追加
+    Column('business_type', String)
 )
 
 # --- 最終テーブル ---
@@ -27,7 +27,7 @@ restaurants_table = Table('restaurants', metadata,
     Column('lng', Float),
     Column('address', String),
     Column('segment', String),
-    Column('business_type', String)   # ← 追加
+    Column('business_type', String)
 )
 
 # ------------------------------
@@ -49,7 +49,11 @@ with engine.connect() as conn:
                 lng = float(row.get("経度") or 0)
                 address = row.get("営業施設所在地", "")
                 segment = row.get("業態", "")
-                business_type = row.get("営業の種類", "")   # ← 新しく追加
+                business_type = row.get("営業の種類", "")
+
+                # --- ⭐ 飲食店営業のみを残すフィルタ ---
+                if business_type not in ["① 飲食店営業", "⑬ その他の食料・飲料販売業"]:
+                    continue
 
                 conn.execute(restaurant_temp.insert().values(
                     name=name,
@@ -82,4 +86,4 @@ with engine.connect() as conn:
 
     conn.commit()
 
-print(f"データベース '{DATABASE_FILE}' を作成したよ！営業の種類も含まれているよ！")
+print(f"データベース '{DATABASE_FILE}' を作成しました！（飲食店営業のみ）")
