@@ -4,15 +4,15 @@ from typing import List, Optional
 
 # ---------- Pydantic モデル定義 ----------
 
-class Restaurant(BaseModel):
-    id: int
-    name: str
+class Restaurant(BaseModel):#クラス定義
+    id: int     #id
+    name: str   #店名
     lat: float  #緯度
-    lng: float
-    address: str
+    lng: float  #経度
+    address: str    #住所
     segment: str  # "student" / "family" など
 
-class RestaurantListResponse(BaseModel):
+class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじない
     restaurants: List[Restaurant]
     count: int
 
@@ -22,7 +22,7 @@ class RestaurantListResponse(BaseModel):
 app = FastAPI()
 
 
-# 動作確認用（既存のやつ）
+# 動作確認用
 @app.get("/")
 def root():
     return {"message": "FastAPI is running!"}
@@ -53,8 +53,8 @@ DUMMY_RESTAURANTS = [
 @app.get("/restaurants", response_model=RestaurantListResponse)
 def list_restaurants(
     segment: Optional[str] = None,  # ?segment=student みたいに絞り込み用
-    limit: int = 100,
-    offset: int = 0,
+    limit: int = 100,   #表示上限
+    offset: int = 0,    #どこから表示するか
 ):
     # segment でフィルタ（指定があれば）
     filtered = DUMMY_RESTAURANTS
@@ -62,9 +62,9 @@ def list_restaurants(
         filtered = [r for r in filtered if r.segment == segment]
 
     # ページング（とりあえず単純にスライス）
-    sliced = filtered[offset : offset + limit]
+    sliced = filtered[offset : offset + limit]  #上記の条件で整形
 
-    return RestaurantListResponse(
+    return RestaurantListResponse(  #表示
         restaurants=sliced,
         count=len(filtered),
     )
