@@ -24,7 +24,6 @@ with engine.connect() as conn:
     print(result.scalar())
 
     # 4. 最初の 5 件を表示
-    print("\n■ 最初の 5 件")
     result = conn.execute(text("SELECT * FROM restaurants"))
     for row in result:
         print(row)
