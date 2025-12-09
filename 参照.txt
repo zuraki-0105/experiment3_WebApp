@@ -1,0 +1,2 @@
+18201_food_business_all.csv https://ifas.mhlw.go.jp/faspub/IO_S011001.do?_Action_=a_backAction  厚生労働省/食品衛生公開データ
+restaurant-fukui.csv   https://code4fukui.github.io/food-japan/sample/restaurant-fukui.html
