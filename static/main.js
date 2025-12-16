@@ -8,6 +8,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // マーカーを保存する配列
 let markerList = [];
+let stationMarkers = [];
+let busStopMarkers = [];
+
 
 
 // ====== /restaurants API からデータ取得 ======
@@ -35,6 +38,49 @@ async function loadRestaurants() {
     });
 }
 
+async function loadStations() {
+    const res = await fetch("/stations");
+    const data = await res.json();
+
+    const icon = L.divIcon({
+        html: "🚉",
+        className: "",
+        iconSize: [20, 20]
+    });
+
+    data.stations.forEach(s => {
+        const marker = L.marker([s.lat, s.lng], { icon })
+            .bindPopup(
+                `<b>${s.name}</b><br>${s.line}<br>${s.company}`
+            );
+
+        marker.addTo(map);
+        stationMarkers.push(marker);
+    });
+}
+
+async function loadBusStops() {
+    const res = await fetch("/bus_stops");
+    const data = await res.json();
+
+    const icon = L.divIcon({
+        html: "🚌",
+        className: "",
+        iconSize: [16, 16]
+    });
+
+    data.bus_stops.forEach(b => {
+        const marker = L.marker([b.lat, b.lng], { icon })
+            .bindPopup(
+                `<b>${b.name}</b>`
+            );
+
+        busStopMarkers.push(marker);
+    });
+}
+
+
+
 
 // ====== フィルタ処理 ======
 function applyFilter() {
@@ -44,6 +90,19 @@ function applyFilter() {
     const showCafe        = document.getElementById("filter-cafe").checked;
     const showDrugstore   = document.getElementById("filter-drugstore").checked;
     const showSuper       = document.getElementById("filter-super").checked;
+
+    // 駅
+    const showStations = document.getElementById("filter-stations").checked;
+    stationMarkers.forEach(m => {
+        showStations ? m.addTo(map) : map.removeLayer(m);
+    });
+
+// バス停
+    const showBusStops = document.getElementById("filter-bus-stops").checked;
+    busStopMarkers.forEach(m => {
+        showBusStops ? m.addTo(map) : map.removeLayer(m);
+    });
+
 
     markerList.forEach(marker => {
         const cate = marker.category;
@@ -77,3 +136,6 @@ document.querySelectorAll("#controls input").forEach(cb => {
 
 // 初期読み込みnyo
 loadRestaurants();
+loadStations();
+loadBusStops();
+
