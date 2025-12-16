@@ -7,16 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
         maxZoom: 19,
     }).addTo(map);
 
-<<<<<<< HEAD
-// マーカーを保存する配列
-let markerList = [];
-let stationMarkers = [];
-let busStopMarkers = [];
-
-=======
     // マーカーを保存する配列
     let markerList = [];
->>>>>>> 023d9ccba89a7ad272c8bf9d4322156ae57c0edf
 
 
     // ====== /restaurants API からデータ取得 ======
@@ -39,129 +31,126 @@ let busStopMarkers = [];
 
             marker.category = r.category;  // ← フィルタ用に保存
 
-<<<<<<< HEAD
-        marker.addTo(map);
-        markerList.push(marker);
-    });
-}
-
-async function loadStations() {
-    const res = await fetch("/stations");
-    const data = await res.json();
-
-    const icon = L.divIcon({
-        html: "🚉",
-        className: "",
-        iconSize: [20, 20]
-    });
-
-    data.stations.forEach(s => {
-        const marker = L.marker([s.lat, s.lng], { icon })
-            .bindPopup(
-                `<b>${s.name}</b><br>${s.line}<br>${s.company}`
-            );
-
-        marker.addTo(map);
-        stationMarkers.push(marker);
-    });
-}
-
-async function loadBusStops() {
-    const res = await fetch("/bus_stops");
-    const data = await res.json();
-
-    const icon = L.divIcon({
-        html: "🚌",
-        className: "",
-        iconSize: [16, 16]
-    });
-
-    data.bus_stops.forEach(b => {
-        const marker = L.marker([b.lat, b.lng], { icon })
-            .bindPopup(
-                `<b>${b.name}</b>`
-            );
-
-        busStopMarkers.push(marker);
-    });
-}
-
-
-
-
-// ====== フィルタ処理 ======
-function applyFilter() {
-    // const showStudent = document.getElementById("filter-student").checked;
-    // const showFamily  = document.getElementById("filter-family").checked;
-    const showConvenience = document.getElementById("filter-convenience").checked;
-    const showCafe        = document.getElementById("filter-cafe").checked;
-    const showDrugstore   = document.getElementById("filter-drugstore").checked;
-    const showSuper       = document.getElementById("filter-super").checked;
-
-    // 駅
-    const showStations = document.getElementById("filter-stations").checked;
-    stationMarkers.forEach(m => {
-        showStations ? m.addTo(map) : map.removeLayer(m);
-    });
-
-// バス停
-    const showBusStops = document.getElementById("filter-bus-stops").checked;
-    busStopMarkers.forEach(m => {
-        showBusStops ? m.addTo(map) : map.removeLayer(m);
-    });
-
-
-    markerList.forEach(marker => {
-        const cate = marker.category;
-
-        // 表示条件
-        const shouldShow =
-            (cate === "student" && showStudent) ||
-            (cate === "family"  && showFamily) ||
-            (cate === "convenience" && showConvenience) ||
-            (cate === "cafe"        && showCafe) ||
-            (cate === "drugstore"   && showDrugstore) ||
-            (cate === "super"       && showSuper);;
-
-        if (shouldShow) {
-=======
->>>>>>> 023d9ccba89a7ad272c8bf9d4322156ae57c0edf
             marker.addTo(map);
             markerList.push(marker);
         });
-
-        applyFilter();
     }
+
+    async function loadStations() {
+        const res = await fetch("/stations");
+        const data = await res.json();
+
+        const icon = L.divIcon({
+            html: "🚉",
+            className: "",
+            iconSize: [20, 20]
+        });
+
+        data.stations.forEach(s => {
+            const marker = L.marker([s.lat, s.lng], { icon })
+                .bindPopup(
+                    `<b>${s.name}</b><br>${s.line}<br>${s.company}`
+                );
+
+            marker.addTo(map);
+            stationMarkers.push(marker);
+        });
+    }
+
+    async function loadBusStops() {
+        const res = await fetch("/bus_stops");
+        const data = await res.json();
+
+        const icon = L.divIcon({
+            html: "🚌",
+            className: "",
+            iconSize: [16, 16]
+        });
+
+        data.bus_stops.forEach(b => {
+            const marker = L.marker([b.lat, b.lng], { icon })
+                .bindPopup(
+                    `<b>${b.name}</b>`
+                );
+
+            busStopMarkers.push(marker);
+        });
+    }
+
+
 
 
     // ====== フィルタ処理 ======
     function applyFilter() {
-        const showStudent = document.getElementById("filter-student").checked;
-        const showFamily  = document.getElementById("filter-family").checked;
+        // const showStudent = document.getElementById("filter-student").checked;
+        // const showFamily  = document.getElementById("filter-family").checked;
         const showConvenience = document.getElementById("filter-convenience").checked;
         const showCafe        = document.getElementById("filter-cafe").checked;
         const showDrugstore   = document.getElementById("filter-drugstore").checked;
         const showSuper       = document.getElementById("filter-super").checked;
 
+        // 駅
+        const showStations = document.getElementById("filter-stations").checked;
+        stationMarkers.forEach(m => {
+            showStations ? m.addTo(map) : map.removeLayer(m);
+        });
+
+        // バス停
+        const showBusStops = document.getElementById("filter-bus-stops").checked;
+        busStopMarkers.forEach(m => {
+            showBusStops ? m.addTo(map) : map.removeLayer(m);
+        });
+
+
         markerList.forEach(marker => {
             const cate = marker.category;
-            
+
             // 表示条件
             const shouldShow =
-                (cate === "student" && showStudent) || 
-                (cate === "family" && showFamily) ||
+                (cate === "student" && showStudent) ||
+                (cate === "family"  && showFamily) ||
                 (cate === "convenience" && showConvenience) ||
                 (cate === "cafe"        && showCafe) ||
                 (cate === "drugstore"   && showDrugstore) ||
-                (cate === "super"       && showSuper);
+                (cate === "super"       && showSuper);;
 
             if (shouldShow) {
                 marker.addTo(map);
-            } else {
-                map.removeLayer(marker);
+                markerList.push(marker);
             }
+
+            applyFilter();
         });
     }
+
+        // ====== フィルタ処理 ======
+    function applyFilter() {
+            const showStudent = document.getElementById("filter-student").checked;
+            const showFamily  = document.getElementById("filter-family").checked;
+            const showConvenience = document.getElementById("filter-convenience").checked;
+            const showCafe        = document.getElementById("filter-cafe").checked;
+            const showDrugstore   = document.getElementById("filter-drugstore").checked;
+            const showSuper       = document.getElementById("filter-super").checked;
+
+            markerList.forEach(marker => {
+                const cate = marker.category;
+                
+                // 表示条件
+                const shouldShow =
+                    (cate === "student" && showStudent) || 
+                    (cate === "family" && showFamily) ||
+                    (cate === "convenience" && showConvenience) ||
+                    (cate === "cafe"        && showCafe) ||
+                    (cate === "drugstore"   && showDrugstore) ||
+                    (cate === "super"       && showSuper);
+
+                if (shouldShow) {
+                    marker.addTo(map);
+                } else {
+                    map.removeLayer(marker);
+                }
+            });
+        }
 
 
     // ====== チェックボックスにイベント追加 ======
@@ -185,13 +174,9 @@ function applyFilter() {
     document.getElementById("filter-family").addEventListener("change", applyFilter);
 
 
-// 初期読み込みnyo----
-loadRestaurants();
-<<<<<<< HEAD
-loadStations();
-loadBusStops();
-
-=======
+    // 初期読み込みnyo----
+    loadRestaurants();
+    loadStations();
+    loadBusStops();
 
 });
->>>>>>> 023d9ccba89a7ad272c8bf9d4322156ae57c0edf
