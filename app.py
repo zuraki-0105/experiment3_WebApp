@@ -106,7 +106,7 @@ def read_root(request: Request):
 @app.get("/restaurants", response_model=RestaurantListResponse)
 def list_restaurants(
     segment: Optional[str] = None,  # ?segment=student みたいに絞り込み用
-    limit: int = 100,   #表示上限
+    limit: int = 300,   #表示上限
     offset: int = 0,    #どこから表示するか
 ):
     with engine.connect() as conn:
