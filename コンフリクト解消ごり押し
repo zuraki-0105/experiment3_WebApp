@@ -9,3 +9,12 @@ git reset --hard origin/master
 
 # 4) 未追跡ファイルも消す（※必要なら。参照.txt とかも消える）
 git clean -fd
+
+
+
+
+完全同期
+git fetch origin
+git checkout master        # mainなら main
+git reset --hard origin/master
+git clean -fd
