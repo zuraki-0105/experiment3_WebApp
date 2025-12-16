@@ -75,5 +75,5 @@ document.querySelectorAll("#controls input").forEach(cb => {
 // document.getElementById("filter-family").addEventListener("change", applyFilter);
 
 
-// 初期読み込みnyo----
+// 初期読み込みnyo
 loadRestaurants();
