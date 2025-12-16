@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, Table, Column, Integer, String, Float, Met
 
 # --- 設定 ---
 CSV_RESTAURANT = 'opendata/18201_food_business_all.csv'
+# CSV_RESTAURANT = 'opendata/restaurant-fukui.csv'
 DATABASE_FILE = 'restaurants.db'
 
 # SQLAlchemy setting
