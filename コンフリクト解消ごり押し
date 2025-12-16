@@ -1,0 +1,11 @@
+# 1) いまのマージ途中状態を強制的に捨てる（効かなくても次で上書きされる）
+git merge --abort
+
+# 2) リモート最新を取得
+git fetch origin
+
+# 3) ローカルmasterをリモートmasterに完全一致させる（全部捨てる）
+git reset --hard origin/master
+
+# 4) 未追跡ファイルも消す（※必要なら。参照.txt とかも消える）
+git clean -fd
