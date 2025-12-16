@@ -136,8 +136,8 @@ async function loadBusStops() {
 // ====== フィルタ処理 ======
 function applyFilter() {
   // 学生/ファミリー
-  const showStudent = document.getElementById("filter-student")?.checked ?? false;
-  const showFamily = document.getElementById("filter-family")?.checked ?? false;
+  // const showStudent = document.getElementById("filter-student")?.checked ?? false;
+  // const showFamily = document.getElementById("filter-family")?.checked ?? false;
 
   const showConvenience =
     document.getElementById("filter-convenience")?.checked ?? false;
@@ -161,9 +161,9 @@ function applyFilter() {
   );
 
   // 飲食店：何もチェックが入ってないなら「全部表示」
+    // showStudent ||
+    // showFamily ||
   const anyRestaurantChecked =
-    showStudent ||
-    showFamily ||
     showConvenience ||
     showCafe ||
     showDrugstore ||
@@ -173,11 +173,12 @@ function applyFilter() {
     const cate = marker.category ?? "";
 
     // ★デバッグしやすいように「未知カテゴリは表示」にしておく（必要なら消してOK）
+    
+      // (cate === "student" && showStudent) ||
+      // (cate === "family" && showFamily) ||
     const shouldShow =
       !anyRestaurantChecked ||
       cate === "" ||
-      (cate === "student" && showStudent) ||
-      (cate === "family" && showFamily) ||
       (cate === "convenience" && showConvenience) ||
       (cate === "cafe" && showCafe) ||
       (cate === "drugstore" && showDrugstore) ||
