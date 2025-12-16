@@ -25,6 +25,19 @@ restaurants_table = Table(
     autoload_with=engine,  # 既存DBからカラム情報を読み込む
 )
 
+stations_table = Table(
+    "stations",
+    metadata,
+    autoload_with=engine,
+)
+
+bus_stops_table = Table(
+    "bus_stops",
+    metadata,
+    autoload_with=engine,
+)
+
+
 # ---------- Pydantic モデル定義 ----------
 
 class Restaurant(BaseModel):#クラス定義
@@ -38,6 +51,36 @@ class Restaurant(BaseModel):#クラス定義
 
 class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじない
     restaurants: List[Restaurant]
+    count: int
+
+
+class Station(BaseModel):
+    id: int
+    name: str
+    name_kana: str
+    address: str
+    line: str
+    company: str
+    lat: float
+    lng: float
+
+
+class StationListResponse(BaseModel):
+    stations: List[Station]
+    count: int
+
+
+class BusStop(BaseModel):
+    id: int
+    stop_no: Optional[int]
+    stop_no_branch: Optional[int]
+    name: str
+    lat: float
+    lng: float
+
+
+class BusStopListResponse(BaseModel):
+    bus_stops: List[BusStop]
     count: int
 
 
@@ -90,3 +133,43 @@ def list_restaurants(
         restaurants=restaurants,
         count=total,
     )
+
+@app.get("/stations", response_model=StationListResponse)
+def list_stations(
+    limit: int = 200,
+    offset: int = 0,
+):
+    with engine.connect() as conn:
+        query = select(stations_table).offset(offset).limit(limit)
+        count_query = select(func.count()).select_from(stations_table)
+
+        rows = conn.execute(query).mappings().all()
+        total = conn.execute(count_query).scalar()
+
+    stations = [Station(**row) for row in rows]
+
+    return StationListResponse(
+        stations=stations,
+        count=total,
+    )
+
+
+@app.get("/bus_stops", response_model=BusStopListResponse)
+def list_bus_stops(
+    limit: int = 500,
+    offset: int = 0,
+):
+    with engine.connect() as conn:
+        query = select(bus_stops_table).offset(offset).limit(limit)
+        count_query = select(func.count()).select_from(bus_stops_table)
+
+        rows = conn.execute(query).mappings().all()
+        total = conn.execute(count_query).scalar()
+
+    bus_stops = [BusStop(**row) for row in rows]
+
+    return BusStopListResponse(
+        bus_stops=bus_stops,
+        count=total,
+    )
+
