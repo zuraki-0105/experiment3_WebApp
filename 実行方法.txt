@@ -2,7 +2,7 @@
  FastAPI 起動手順（Windows / PowerShell）
 ==============================
 [0]とみやだけ実行
-conda deactivate
+conda activate webexp
 
 【1】プロジェクトフォルダへ移動
 --------------------------------
