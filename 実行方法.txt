@@ -9,12 +9,17 @@ conda activate webexp
 例：
 cd \\fecscsfs.fecs.eng.w.u-fukui.ac.jp\Home\hb230759\Desktop\実験３web\自由制作\experiment3_WebApp
 
+(venv がないとき)
+python -m venv venv
 
 【2】venv を有効化する
 --------------------------------
 venv\Scripts\activate
 
 （成功するとプロンプトの先頭に (venv) が付く）
+
+(なんかインストールするとき)
+pip install -r requirements.txt
 
 
 【3】FastAPI を起動する（app.py を実行）
