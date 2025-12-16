@@ -126,7 +126,7 @@ def list_restaurants(
         rows = conn.execute(query).mappings().all()
         total = conn.execute(count_query).scalar()
 
-    # row は dict っぽいオブジェクトになるので、そのまま展開して Pydantic に渡す
+    # row は dict っぽいオブジェクトになるので、そのまま展開して Pydantic に渡すうぇええ
     restaurants = [Restaurant(**row) for row in rows]
 
     return RestaurantListResponse(
