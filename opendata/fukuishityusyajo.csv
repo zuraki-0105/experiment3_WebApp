@@ -1,0 +1,13 @@
+#LINK,,,,,,,,
+#lang,ja,,,,,,,
+#attribution_name,fukuishi,,,,,,,
+#license,http://creativecommons.org/licenses/by/3.0/deed.ja,,,,,,,
+#file_name,fukuishityusyajo,,,,,,,
+#download_from,http://linkdata.org/work/rdf1s1702i,,,,,,,
+#property,駐車場名,所在地,電話番号,緯度,経度,総収容台数,営業時間,休業日
+#object_type_xsd,string,string,string,float,float,string,string,string
+#property_context,	Assertion,	Assertion,	Assertion,	Assertion,	Assertion,	Assertion,	Assertion,	Assertion
+1,福井市大手駐車場,福井市大手3丁目10-1,0776-20-5686,36.063821,136.218884,264台,24時間,なし
+2,福井市大手第２駐車場,福井市大手3丁目12-20,0776-20-5688,36.065003,136.218294,102台,7:30～23:00,なし
+3,福井市本町通り地下駐車場,福井市順化1丁目及び中央3丁目地係,0776-20-5760,36.062639,136.216636,316台,7:00～0：30,なし
+4,フェニックス・プラザ自動車駐車場,福井市田原1丁目11-1,0776-20-5065,36.073431,136.217318,403台,7：30～22：30,なし
