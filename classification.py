@@ -11,7 +11,7 @@ def classify_by_segment(segment: str) -> str:
 
     s = segment.strip()
 
-    # ドラッグストア
+    # ドラッグストアaaa
     if "ドラッグ" in s:
         return "drugstore"
 

@@ -14,7 +14,7 @@ from fastapi.templating import Jinja2Templates
 DATABASE_FILE = "restaurants.db"
 engine = create_engine(
     f"sqlite:///{DATABASE_FILE}",
-    connect_args={"check_same_thread": False},  # FastAPI で SQLite 使うときおまじない
+    connect_args={"check_same_thread": False},  # FastAPI で SQLite 使うときおまじないああああああ
 )
 metadata = MetaData()
 

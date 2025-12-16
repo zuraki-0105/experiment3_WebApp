@@ -182,7 +182,7 @@ with engine.connect() as conn:
         next(f)  # #object_type_xsd
         next(f)  # #property_context
 
-        # ★ ID列が先頭にある想定あ
+        # ★ ID列が先頭にある想定あaa
         reader = csv.DictReader(
             f,
             fieldnames=["id", "バス系統名", "バス停名", "緯度", "経度"]

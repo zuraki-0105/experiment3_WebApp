@@ -1,7 +1,7 @@
 // ====== 地図の初期化 ======
 const map = L.map("map").setView([36.0641, 136.2193], 14);
 
-// Tile （背景地図）
+// Tile （背景地図）aaa
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);

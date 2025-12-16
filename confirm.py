@@ -13,7 +13,7 @@ with engine.connect() as conn:
     tables = inspector.get_table_names()
     print(tables)
 
-    # 2. restaurants テーブルのカラム情報
+    # 2. restaurants テーブルのカラム情報aaa
     print("\n■ restaurants テーブルのカラム")
     for column in inspector.get_columns("restaurants"):
         print(f"{column['name']} ({column['type']})")
