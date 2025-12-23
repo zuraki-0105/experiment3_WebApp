@@ -144,16 +144,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const kudari = kRes.items ?? [];
         const nobori = nRes.items ?? [];
 
+        function prettyTrainType(type) {
+          if (type === "電") return "普通";
+          return type;
+        }
+
         function render(list) {
           if (!list.length) return "（なし）";
           return list.slice(0, 30).map(x => {
             const time = x.time ?? "";
-            const type = x.train_type ?? "";
+            const type = prettyTrainType(x.train_type ?? "");
             const dest = x.dest ?? "";
             const note = x.note ? ` / ${x.note}` : "";
-            return `${time} ${type} →${dest}${note}`;
+            return `${time} ${type}：${dest}${note}`;
           }).join("<br>");
         }
+
 
         if (kudari.length === 0 && nobori.length === 0) {
           marker
