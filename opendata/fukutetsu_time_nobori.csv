@@ -2,7 +2,7 @@
 #file_name,fukutetsu_nobori,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 #lang,ja,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 #attribution_name,fukuishi,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-#property,列車番号,行き先,種別,鷲塚針原_発,中角_発,新田塚_発,八ツ島_発,日華化学前_発,西福井_発,田原町_着,田原町_発,仁愛女子_発,福井城址_着,福井駅_着,福井駅_発,福井城址_発,足羽山公_発,商工会議_発,赤十字前_発,花堂_発,ベル前_発,江端_発,清明_発,ハ－モニ_発,浅水_発,泰澄の里_発,三十八社_発,鳥羽中_発,神明_発,水落_発,西山公園_発,西鯖江_発,サンド西_発,家久_発,スポ公_発,北府_発,たけふ新_着,備考
+#property,列車番号,行き先,種別,鷲塚針原_発,中角_発,新田塚_発,八ッ島_発,日華化学前_発,福大前西福井_発,田原町_着,田原町_発,仁愛女子高校_発,福井城址大名町_着,福井駅_着,福井駅_発,福井城址_発,足羽山公園口_発,商工会議所前_発,赤十字前_発,花堂_発,ベル前_発,江端_発,清明_発,ハーモニーホール_発,浅水_発,泰澄の里_発,三十八社_発,鳥羽中_発,神明_発,水落_発,西山公園_発,西鯖江_発,サンド西_発,家久_発,スポ公_発,北府_発,たけふ新_着,備考
 #object_type_xsd,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string
 #property_context,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion
 1,602,たけふ新,普通,,,,,,,,6:01,6:04,6:05,,,6:06,6:09,6:11,6:16,6:18,6:20,6:22,6:24,6:26,6:28,6:30,6:33,6:35,6:38,6:43,6:45,6:47,6:49,6:54,6:55,6:58,7:00,

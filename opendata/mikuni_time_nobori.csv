@@ -4,7 +4,7 @@
 #license,http://creativecommons.org/licenses/by/3.0/deed.ja,,,,,,,,,,,,,,,,,,,,,,,,,,,
 #file_name,mikuni_nobori,,,,,,,,,,,,,,,,,,,,,,,,,,,
 #download_from,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-#property,列車番号,列車種別,始発～行先,三国港,三国,三国神社,水居,あわら湯のまち,番田,本荘,大関,下兵庫こうふく,西長田ゆりの里,西春江ハートピア,太郎丸エンゼルランド,鷲塚針原,仁愛グランド前,中角,新田塚,八ツ島,日華化学前,福大前西福井,田原町,西別院,まつもと町屋,福井口,新福井,福井
+#property,列車番号,列車種別,始発～行先,三国港,三国,三国神社,水居,あわら湯のまち,番田,本荘,大関,下兵庫こうふく,西長田ゆりの里,西春江ハートピア,太郎丸エンゼルランド,鷲塚針原,仁愛グランド前,中角,新田塚,八ッ島,日華化学前,福大前西福井,田原町,西別院,まつもと町屋,福井口,新福井,福井
 #object_type_xsd,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string
 #property_context,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion,assertion
 1,530M,電,三国港～福井,5:30,5:32,5:34,5:36,5:39,5:42,5:44,5:46,5:49,5:52,5:54,5:56,5:58,→,6:01,6:03,6:05,6:06,6:08,6:10,6:11,6:12,6:15,6:17,6:18
