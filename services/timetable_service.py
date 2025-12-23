@@ -113,31 +113,23 @@ def get_station_names():
 
 
 def get_timetable_by_station(station: str, direction: str | None = None):
-    """
-    direction:
-      None -> 上下まとめて返す
-      "kudari"/"nobori" -> 片方だけ
-    さらに「発だけほしい」仕様:
-      そのdirection内に発があれば発だけ返す。なければ着だけ返す。
-    """
     global _station_map
     if _station_map is None:
         _load_csv_to_cache()
 
     items = _station_map.get(station, [])
+
     if direction in ("kudari", "nobori"):
         items = [x for x in items if x.get("direction") == direction]
 
     dep = [x for x in items if x.get("event") == "発"]
     if dep:
-        for x in dep:
-            x.pop("event", None)
-        return dep
+        # ★コピーして event を落とす（キャッシュは触らない）
+        return [{k: v for k, v in x.items() if k != "event"} for x in dep]
 
     arr = [x for x in items if x.get("event") == "着"]
-    for x in arr:
-        x.pop("event", None)
-    return arr
+    return [{k: v for k, v in x.items() if k != "event"} for x in arr]
+
 
 def debug_summary():
     global _cache
