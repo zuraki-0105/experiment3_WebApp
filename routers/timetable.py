@@ -4,6 +4,17 @@ from services.timetable_service import get_timetable_by_station
 router = APIRouter(tags=["timetable"])
 
 @router.get("/timetable")
-def timetable(station: str = Query(..., description="駅名（例：西鯖江）")):
-    items = get_timetable_by_station(station)
-    return {"station": station, "count": len(items), "items": items}
+def timetable(
+    station: str = Query(...),
+    direction: str | None = Query(None, description="kudari / nobori / None(両方)"),
+):
+    items = get_timetable_by_station(station, direction=direction)
+    return {"station": station, "direction": direction, "count": len(items), "items": items}
+
+@router.get("/timetable_debug")
+def timetable_debug():
+    from services.timetable_service import debug_summary
+    return debug_summary()
+
+
+
