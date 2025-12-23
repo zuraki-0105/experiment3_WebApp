@@ -118,40 +118,58 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     // ====== 駅名を保持して、クリックで時刻表取得 ======
-    marker.stationName = s.name ?? "";
+    let key = (s.name ?? "")
+      .replace(/（.*?）/g, "")     // カッコ除去
+      .replace(/\s+/g, "")         // 空白除去
+      .trim();
+
+    // ★福井駅だけは「駅」を消さない（CSV側が福井駅なので）
+    if (key !== "福井駅") {
+      key = key.replace(/駅$/, "");
+    }
+
+    marker.stationName = key;
+
+
 
     marker.on("click", async () => {
-      const station = marker.stationName;
+    const station = marker.stationName;
 
-      try {
-        const tt = await fetchJson(`/timetable?station=${encodeURIComponent(station)}`);
-        const items = tt.items ?? [];
+    try {
+        const [kRes, nRes] = await Promise.all([
+          fetchJson(`/timetable?station=${encodeURIComponent(station)}&direction=kudari`),
+          fetchJson(`/timetable?station=${encodeURIComponent(station)}&direction=nobori`),
+        ]);
 
-        if (items.length === 0) {
+        const kudari = kRes.items ?? [];
+        const nobori = nRes.items ?? [];
+
+        function render(list) {
+          if (!list.length) return "（なし）";
+          return list.slice(0, 30).map(x => {
+            const time = x.time ?? "";
+            const type = x.train_type ?? "";
+            const dest = x.dest ?? "";
+            const note = x.note ? ` / ${x.note}` : "";
+            return `${time} ${type} →${dest}${note}`;
+          }).join("<br>");
+        }
+
+        if (kudari.length === 0 && nobori.length === 0) {
           marker
             .bindPopup(`<b>${station}</b><br>時刻表データが見つかりません`)
             .openPopup();
           return;
         }
 
-        const lines = items.slice(0, 60).map((x) => {
-          const time = x.time ?? "";
-          const trainNo = x.train_no ?? "";
-          const type = x.train_type ?? "";
-          const dest = x.dest ?? "";
-          const note = x.note ? ` / ${x.note}` : "";
-          const event = x.event ? `(${x.event})` : "";
-          return `${time}${event} ${trainNo} ${type} →${dest}${note}`;
-        });
+        marker.bindPopup(
+          `<b>${station}</b><br>` +
+          `<div style="max-height:260px; overflow:auto; font-size:12px; line-height:1.4;">` +
+          `<b>くだり</b><br>${render(kudari)}<br><br>` +
+          `<b>のぼり</b><br>${render(nobori)}` +
+          `</div>`
+        ).openPopup();
 
-        marker
-          .bindPopup(
-            `<b>${station}</b><br>` +
-              `<div style="max-height:220px; overflow:auto; font-size:12px; line-height:1.4;">` +
-              lines.join("<br>") +
-              `</div>`
-          )
-          .openPopup();
       } catch (e) {
         console.error(e);
         marker
