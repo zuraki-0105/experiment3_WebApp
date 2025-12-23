@@ -68,48 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>(${cateStr})<br><br>最寄り駅　　  ： <br>最寄りバス停  ： `
       );
 
-            // ====== 駅名を保持して、クリックで時刻表取得 ======
-      marker.stationName = s.name ?? "";
-
-      marker.on("click", async () => {
-        const station = marker.stationName;
-
-        try {
-          const data = await fetchJson(`/timetable?station=${encodeURIComponent(station)}`);
-          const items = data.items ?? [];
-
-          if (items.length === 0) {
-            marker
-              .bindPopup(`<b>${station}</b><br>時刻表データが見つかりません`)
-              .openPopup();
-            return;
-          }
-
-          // 表示用（長くなりすぎないように最大60件）
-          const lines = items.slice(0, 60).map(x => {
-            const time = x.time ?? "";
-            const trainNo = x.train_no ?? "";
-            const type = x.train_type ?? "";
-            const dest = x.dest ?? "";
-            const note = x.note ? ` / ${x.note}` : "";
-            const event = x.event ? `(${x.event})` : "";
-            return `${time}${event} ${trainNo} ${type} →${dest}${note}`;
-          });
-
-          marker.bindPopup(
-            `<b>${station}</b><br>` +
-            `<div style="max-height:220px; overflow:auto; font-size:12px; line-height:1.4;">` +
-            lines.join("<br>") +
-            `</div>`
-          ).openPopup();
-        } catch (e) {
-          console.error(e);
-          marker
-            .bindPopup(`<b>${station}</b><br>時刻表の取得に失敗しました`)
-            .openPopup();
-        }
-      });
-
       marker.category = cate; // フィルタ用
       marker.addTo(map);
       restaurantsMarkers.push(marker);
@@ -119,40 +77,83 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function loadStations() {
-    const data = await fetchJson("/stations");
-    const stations = data.stations ?? [];
+  const data = await fetchJson("/stations");
+  const stations = data.stations ?? [];
 
-    console.log("API stations count:", stations.length);
-    console.log("stations[0] =", stations[0]);
+  console.log("API stations count:", stations.length);
+  console.log("stations[0] =", stations[0]);
 
-    const icon = L.divIcon({
-      html: "🚉",
-      className: "",
-      iconSize: [20, 20],
-    });
+  const icon = L.divIcon({
+    html: "🚉",
+    className: "",
+    iconSize: [20, 20],
+  });
 
-    // 初期化
-    stationMarkers.forEach((m) => map.removeLayer(m));
-    stationMarkers = [];
+  // 初期化
+  stationMarkers.forEach((m) => map.removeLayer(m));
+  stationMarkers = [];
 
-    stations.forEach((s, idx) => {
-      const ll = toLatLng(s.lat, s.lng);
-      if (!ll) {
-        console.warn("stations invalid lat/lng:", idx, s);
-        return;
+  stations.forEach((s, idx) => {
+    const ll = toLatLng(s.lat, s.lng);
+    if (!ll) {
+      console.warn("stations invalid lat/lng:", idx, s);
+      return;
+    }
+
+    const marker = L.marker(ll, { icon }).bindPopup(
+      `<b>${s.name ?? ""}</b><br>${s.line ?? ""}<br>${s.company ?? ""}`
+    );
+
+    // ====== 駅名を保持して、クリックで時刻表取得 ======
+    marker.stationName = s.name ?? "";
+
+    marker.on("click", async () => {
+      const station = marker.stationName;
+
+      try {
+        const tt = await fetchJson(`/timetable?station=${encodeURIComponent(station)}`);
+        const items = tt.items ?? [];
+
+        if (items.length === 0) {
+          marker
+            .bindPopup(`<b>${station}</b><br>時刻表データが見つかりません`)
+            .openPopup();
+          return;
+        }
+
+        const lines = items.slice(0, 60).map((x) => {
+          const time = x.time ?? "";
+          const trainNo = x.train_no ?? "";
+          const type = x.train_type ?? "";
+          const dest = x.dest ?? "";
+          const note = x.note ? ` / ${x.note}` : "";
+          const event = x.event ? `(${x.event})` : "";
+          return `${time}${event} ${trainNo} ${type} →${dest}${note}`;
+        });
+
+        marker
+          .bindPopup(
+            `<b>${station}</b><br>` +
+              `<div style="max-height:220px; overflow:auto; font-size:12px; line-height:1.4;">` +
+              lines.join("<br>") +
+              `</div>`
+          )
+          .openPopup();
+      } catch (e) {
+        console.error(e);
+        marker
+          .bindPopup(`<b>${station}</b><br>時刻表の取得に失敗しました`)
+          .openPopup();
       }
-
-      const marker = L.marker(ll, { icon }).bindPopup(
-        `<b>${s.name ?? ""}</b><br>${s.line ?? ""}<br>${s.company ?? ""}`
-      );
-      
-
-      marker.addTo(map);
-      stationMarkers.push(marker);
     });
 
-    console.log("station markers:", stationMarkers.length);
-  }
+    marker.addTo(map);
+    stationMarkers.push(marker);
+  });
+
+  console.log("station markers:", stationMarkers.length);
+}
+
 
   async function loadBusStops() {
     const data = await fetchJson("/bus_stops");
