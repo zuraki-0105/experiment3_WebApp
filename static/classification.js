@@ -1,5 +1,5 @@
 window.classifyBySegment = function(segment){
-  if (!segment) return "other";
+  if (!segment) return "restaurant";
   const s = segment.trim();
 
   if (s.includes("ドラッグ")) return "drugstore";
@@ -9,5 +9,5 @@ window.classifyBySegment = function(segment){
   if (s.includes("スーパー") || s.includes("小売") || s.includes("百貨店"))
     return "super";
 
-  return "other";
+  return "restaurant";
 }

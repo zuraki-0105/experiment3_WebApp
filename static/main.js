@@ -55,9 +55,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const raw = r.segment ?? r.business_type ?? "";
       const cate = classifyBySegment(raw);
+      let cateStr = "";
+
+      if(cate === "restaurant") cateStr = "レストラン";
+      else if(cate === "drugstore") cateStr = "ドラッグストア";
+      else if(cate === "convenience") cateStr = "コンビニ";
+      else if(cate === "cafe") cateStr = "カフェ・喫茶店";
+      else if(cate === "super") cateStr = "スーパー";
+      else cateStr = "None";
 
       const marker = L.marker(ll).bindPopup(
-        `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>${cate}`
+        `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>${cateStr}`
       );
 
       marker.category = cate; // フィルタ用
