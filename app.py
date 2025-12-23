@@ -16,7 +16,7 @@ from routers.timetable import router as timetable_router
 DATABASE_FILE = "restaurants.db"
 engine = create_engine(
     f"sqlite:///{DATABASE_FILE}",
-    connect_args={"check_same_thread": False},  # FastAPI で SQLite 使うときおまじないああああああ
+    connect_args={"check_same_thread": False},  # FastAPI で SQLite 使うときおまじない
 )
 metadata = MetaData()
 
@@ -26,13 +26,11 @@ restaurants_table = Table(
     metadata,
     autoload_with=engine,  # 既存DBからカラム情報を読み込む
 )
-
 stations_table = Table(
     "stations",
     metadata,
     autoload_with=engine,
 )
-
 bus_stops_table = Table(
     "bus_stops",
     metadata,
@@ -48,48 +46,48 @@ class Restaurant(BaseModel):#クラス定義
     lat: float  #緯度
     lng: float  #経度
     address: str    #住所
-    segment: str  # "restaurants" / "convenience" など
-    business_type: str
+    segment: str  #業態
+    business_type: str  #営業の種類
 
 class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじない
-    restaurants: List[Restaurant]
-    count: int
+    restaurants: List[Restaurant]   #リスト形式で複数のレストラン情報を格納
+    count: int  #総数
 
 
-class Station(BaseModel):
-    id: int
-    name: str
-    name_kana: str
-    address: str
-    line: str
-    company: str
-    lat: float
-    lng: float
+class Station(BaseModel):   #クラス定義
+    id: int   #id
+    name: str   #駅名
+    name_kana: str   #駅名（かな）
+    address: str   #住所
+    line: str   #路線
+    company: str   #鉄道会社
+    lat: float   #緯度
+    lng: float   #経度
 
 
 class StationListResponse(BaseModel):
-    stations: List[Station]
-    count: int
+    stations: List[Station]  #駅情報のリスト
+    count: int  #総数
 
 
 class BusStop(BaseModel):
-    id: int
-    stop_no: Optional[int]
-    stop_no_branch: Optional[int]
-    name: str
-    lat: float
-    lng: float
+    id: int   #id
+    stop_no: Optional[int]   #停留所番号
+    stop_no_branch: Optional[int]   #停留所番号（枝番）
+    name: str   #停留所名
+    lat: float   #緯度
+    lng: float   #経度
 
 
-class BusStopListResponse(BaseModel):
-    bus_stops: List[BusStop]
-    count: int
+class BusStopListResponse(BaseModel):   
+    bus_stops: List[BusStop]  #バス停情報のリスト
+    count: int  #総数
 
 
 # ---------- FastAPI アプリ本体 ----------
 
 app = FastAPI()
-app.include_router(timetable_router)
+app.include_router(timetable_router)    # 時刻表ルーター
 
 # staticフォルダを公開
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -133,7 +131,7 @@ def list_restaurants(
         rows = conn.execute(query).mappings().all()
         total = conn.execute(count_query).scalar()
 
-    # row は dict っぽいオブジェクトになるので、そのまま展開して Pydantic に渡すうぇええ
+    # row は dict っぽいオブジェクトになるので、そのまま展開して Pydantic に渡す
     restaurants = [Restaurant(**row) for row in rows]
 
     return RestaurantListResponse(
@@ -141,11 +139,13 @@ def list_restaurants(
         count=total,
     )
 
-@app.get("/stations", response_model=StationListResponse)
+# /stations エンドポイント
+@app.get("/stations", response_model=StationListResponse)   #駅情報取得API
 def list_stations(
     limit: int = 200,
     offset: int = 0,
 ):
+    # DB から駅情報を取得
     with engine.connect() as conn:
         query = select(stations_table).offset(offset).limit(limit)
         count_query = select(func.count()).select_from(stations_table)
@@ -153,19 +153,21 @@ def list_stations(
         rows = conn.execute(query).mappings().all()
         total = conn.execute(count_query).scalar()
 
-    stations = [Station(**row) for row in rows]
+    stations = [Station(**row) for row in rows] #Pydanticモデルに変換
+
 
     return StationListResponse(
         stations=stations,
         count=total,
     )
 
-
+# /bus_stops エンドポイント
 @app.get("/bus_stops", response_model=BusStopListResponse)
 def list_bus_stops(
     limit: int = 500,
     offset: int = 0,
 ):
+    # DB からバス停情報を取得
     with engine.connect() as conn:
         query = select(bus_stops_table).offset(offset).limit(limit)
         count_query = select(func.count()).select_from(bus_stops_table)
