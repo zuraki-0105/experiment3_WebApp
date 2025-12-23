@@ -77,10 +77,11 @@ h1 {
 
     background: linear-gradient(
         90deg,
-        #1e3a8a 0%,
-        #2563eb 40%,
-        #60a5fa 60%,
-        #1e3a8a 100%
+        #020617 0%,
+        #1e293b 35%,
+        #475569 50%,
+        #1e293b 65%,
+        #020617 100%
     );
     background-size: 200% 100%;
     
