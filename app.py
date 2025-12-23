@@ -48,7 +48,7 @@ class Restaurant(BaseModel):#クラス定義
     lat: float  #緯度
     lng: float  #経度
     address: str    #住所
-    segment: str  # "student" / "family" など
+    segment: str  # "restaurants" / "convenience" など
     business_type: str
 
 class RestaurantListResponse(BaseModel):#ミスを減らすためのおまじない
