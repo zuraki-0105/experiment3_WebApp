@@ -7,6 +7,8 @@ from sqlalchemy import create_engine, MetaData, Table, select, func
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+#from routers.timetable import router as timetable_router
+#app.include_router(timetable_router)
 
 # -------------------
 # DB 設定（※パスを合わせる）
