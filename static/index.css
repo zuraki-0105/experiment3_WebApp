@@ -1,0 +1,90 @@
+/* ====== 全体リセット ====== */
+* {
+  box-sizing: border-box;
+}
+
+/* ====== 背景 & 全体中央寄せ ====== */
+body.home {
+  margin: 0;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* 背景写真 */
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.45),
+      rgba(0, 0, 0, 0.45)
+    ),
+    url("/static/images/fukui_station.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+}
+
+
+
+/* ====== 中央カード ====== */
+.home-container {
+  background: #ffffff;
+  padding: 48px 56px;
+  border-radius: 12px;
+
+  text-align: center;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ====== タイトル ====== */
+.home-container h1 {
+  margin: 0 0 16px 0;
+
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* ====== サブタイトル ====== */
+.home-container p {
+  margin: 0 0 36px 0;
+
+  font-size: 15px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ====== スタートボタン ====== */
+#start-btn {
+  padding: 14px 48px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #fff;
+  background-color: #4c6ef5;
+
+  border: none;
+  border-radius: 24px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+/* ホバー時 */
+#start-btn:hover {
+  background-color: #3b5bdb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(76, 110, 245, 0.3);
+}
+
+/* 押下時 */
+#start-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
