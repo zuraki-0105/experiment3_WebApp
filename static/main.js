@@ -1,3 +1,6 @@
+//from routers.timetable import router as timetable_router
+//app.include_router(timetable_router)
+
 document.addEventListener("DOMContentLoaded", () => {
   // ====== 地図の初期化 ======
   const map = L.map("map").setView([36.0641, 136.2193], 14);
