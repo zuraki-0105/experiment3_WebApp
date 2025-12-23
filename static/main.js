@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     restaurantsMarkers.forEach((m) => map.removeLayer(m));
     restaurantsMarkers = [];
 
+    
+
     // マーカー作成
     restaurants.forEach((r, idx) => {
       const ll = toLatLng(r.lat, r.lng);
@@ -52,6 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
         console.warn("restaurants invalid lat/lng:", idx, r);
         return;
       }
+
+      const nearestStation = findNearest(ll, stationMarkers);
+      const nearestBusStop = findNearest(ll, busStopMarkers);
+
+      const nearestStationText = nearestStation
+        ? `${nearestStation.marker.name}（${nearestStation.distance} m）`
+        : "なし";
+
+      const nearestBusStopText = nearestBusStop
+        ? `${nearestBusStop.marker.name}（${nearestBusStop.distance} m）`
+        : "なし";
 
       const raw = r.segment ?? r.business_type ?? "";
       const cate = classifyBySegment(raw);
@@ -65,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else cateStr = "None";
 
       const marker = L.marker(ll).bindPopup(
-        `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>(${cateStr})<br><br>最寄り駅　　  ： <br>最寄りバス停  ： `
+        `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>(${cateStr})<br><br>最寄り駅　　  ： ${nearestStationText}<br>最寄りバス停  ： ${nearestBusStopText}`
       );
 
       marker.category = cate; // フィルタ用
@@ -147,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    marker.name = s.name;
     marker.addTo(map);
     stationMarkers.push(marker);
   });
@@ -181,6 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const marker = L.marker(ll, { icon }).bindPopup(`<b>${b.name ?? ""}</b>`);
       // addTo(map) は applyFilter が制御
+      marker.name = b.name;
       busStopMarkers.push(marker);
     });
 
@@ -231,18 +246,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 初期読み込み
   (async () => {
-    const results = await Promise.allSettled([
-      loadRestaurants(),
-      loadStations(),
-      loadBusStops(),
-    ]);
-    console.log("load results:", results);
-
-    // rejected があるなら中身を出す
-    results.forEach((r, i) => {
-      if (r.status === "rejected") console.error("load failed:", i, r.reason);
-    });
-
+    try {
+      await loadStations();
+      await loadBusStops();
+      await loadRestaurants();
+    } catch (e) {
+      console.error("load failed:", e);
+    }
     applyFilter();
   })();
 });
