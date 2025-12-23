@@ -1,14 +1,48 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f7fa;
+    color: #333;
 }
 
+/* 全体のカード感 */
+#controls,
 #map {
-    height: 600px;
-    border: 1px solid black;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 操作エリア */
+#controls {
+    padding: 16px 20px;
     margin-bottom: 20px;
 }
 
-#controls {
-    margin-bottom: 10px;
+/* 地図 */
+#map {
+    height: 600px;
+    margin-bottom: 20px;
+    overflow: hidden; /* 角丸を効かせる */
+}
+
+/* ボタン共通（あれば） */
+button {
+    background-color: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background-color: #1e4fd8;
+}
+
+button:active {
+    transform: scale(0.97);
 }
