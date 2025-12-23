@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else cateStr = "None";
 
       const marker = L.marker(ll).bindPopup(
-        `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>${cateStr}`
+        `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>(${cateStr})<br><br>最寄り駅　　  ： <br>最寄りバス停  ： `
       );
 
       marker.category = cate; // フィルタ用
