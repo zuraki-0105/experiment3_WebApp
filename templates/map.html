@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>飲食店マップ</title>
+
+    <!-- Leaflet CSS（integrityなし） -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="icon" href="data:,">
+    <!-- 自作CSS -->
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <h1>飲食店マップ</h1>
+
+    <!-- 地図を置く場所 -->
+    <div id="map"></div>
+
+    <!-- フィルタ（必要なら） -->
+
+    <div id="controls">
+        <label><input type="checkbox" id="filter-convenience" checked> コンビニ</label>
+        <label><input type="checkbox" id="filter-cafe" checked> カフェ・喫茶店</label>
+        <label><input type="checkbox" id="filter-drugstore" checked> ドラッグストア</label>
+        <label><input type="checkbox" id="filter-super" checked> スーパー</label>
+        <label><input type="checkbox" id="filter-other" checked>その他(レストラン)</label>
+    </div>
+    <div id="controls">
+        <label><input type="checkbox" id="filter-stations" checked> 駅</label>
+        <label><input type="checkbox" id="filter-bus-stops"> バス停</label>
+    </div>
+
+
+    <!-- Leaflet JS（integrityなし） -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- 自作JS -->
+    <script src="/static/findNear.js"></script>
+    <script src="/static/classification.js"></script>
+    <script src="/static/main.js"></script>
+</body>
+</html>

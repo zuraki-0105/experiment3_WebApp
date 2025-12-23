@@ -103,6 +103,10 @@ templates = Jinja2Templates(directory="templates")
 def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+#/map エンドポイント
+@app.get("/map")
+def read_map(request: Request):
+    return templates.TemplateResponse("map.html", {"request": request})
 
 
 # /restaurants エンドポイント
