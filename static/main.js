@@ -1,6 +1,3 @@
-//from routers.timetable import router as timetable_router
-//app.include_router(timetable_router)
-
 document.addEventListener("DOMContentLoaded", () => {
   // ====== 地図の初期化 ======
   const map = L.map("map").setView([36.0641, 136.2193], 14);
@@ -70,6 +67,48 @@ document.addEventListener("DOMContentLoaded", () => {
       const marker = L.marker(ll).bindPopup(
         `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>(${cateStr})<br><br>最寄り駅　　  ： <br>最寄りバス停  ： `
       );
+
+            // ====== 駅名を保持して、クリックで時刻表取得 ======
+      marker.stationName = s.name ?? "";
+
+      marker.on("click", async () => {
+        const station = marker.stationName;
+
+        try {
+          const data = await fetchJson(`/timetable?station=${encodeURIComponent(station)}`);
+          const items = data.items ?? [];
+
+          if (items.length === 0) {
+            marker
+              .bindPopup(`<b>${station}</b><br>時刻表データが見つかりません`)
+              .openPopup();
+            return;
+          }
+
+          // 表示用（長くなりすぎないように最大60件）
+          const lines = items.slice(0, 60).map(x => {
+            const time = x.time ?? "";
+            const trainNo = x.train_no ?? "";
+            const type = x.train_type ?? "";
+            const dest = x.dest ?? "";
+            const note = x.note ? ` / ${x.note}` : "";
+            const event = x.event ? `(${x.event})` : "";
+            return `${time}${event} ${trainNo} ${type} →${dest}${note}`;
+          });
+
+          marker.bindPopup(
+            `<b>${station}</b><br>` +
+            `<div style="max-height:220px; overflow:auto; font-size:12px; line-height:1.4;">` +
+            lines.join("<br>") +
+            `</div>`
+          ).openPopup();
+        } catch (e) {
+          console.error(e);
+          marker
+            .bindPopup(`<b>${station}</b><br>時刻表の取得に失敗しました`)
+            .openPopup();
+        }
+      });
 
       marker.category = cate; // フィルタ用
       marker.addTo(map);
