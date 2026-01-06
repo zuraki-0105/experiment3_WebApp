@@ -1,3 +1,4 @@
+// データの業種に対して分類わけ
 window.classifyBySegment = function(segment){
   if (!segment) return "restaurant";
   const s = segment.trim();

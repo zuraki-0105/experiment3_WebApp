@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ====== 地図の初期化 ======
   const map = L.map("map").setView([36.0641, 136.2193], 14);
 
-  // Tile （背景地図）aaa
+  // Tile （背景地図）
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
   }).addTo(map);
@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let stationMarkers = [];
   let busStopMarkers = [];
 
-  // ====== 共通：fetchしてJSONを安全に読む ======
+  // fetchしてJSONを読む
   async function fetchJson(url) {
     const res = await fetch(url);
 
-    // ここで落とさず、原因が見える形で例外化
+    // 原因表示
     if (!res.ok) {
       const text = await res.text().catch(() => "");
       throw new Error(`${url} failed: ${res.status} ${res.statusText}\n${text}`);
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return res.json();
   }
 
-  // ====== 共通：緯度経度のバリデーション ======
+  // 緯度経度のバリデーション
   function toLatLng(lat, lng) {
     const la = Number(lat);
     const ln = Number(lng);
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return [la, ln];
   }
 
-  // ====== /restaurants API からデータ取得 ======
+  // /restaurants API からデータ取得
   async function loadRestaurants() {
     const data = await fetchJson("/restaurants");
     const restaurants = data.restaurants ?? [];
@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("API restaurants count:", restaurants.length);
     console.log("restaurants[0] =", restaurants[0]);
 
-    // 初期化
     restaurantsMarkers.forEach((m) => map.removeLayer(m));
     restaurantsMarkers = [];
 
@@ -50,13 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // マーカー作成
     restaurants.forEach((r, idx) => {
       const ll = toLatLng(r.lat, r.lng);
+      // 緯度・経度が不正なデータはスキップ
       if (!ll) {
         console.warn("restaurants invalid lat/lng:", idx, r);
         return;
       }
 
-      const nearestStation = findNearest(ll, stationMarkers);
-      const nearestBusStop = findNearest(ll, busStopMarkers);
+      
+      const nearestStation = findNearest(ll, stationMarkers); // 最も近い駅マーカーを取得
+      const nearestBusStop = findNearest(ll, busStopMarkers); // 最も近いバス停マーカーを取得
 
       const nearestStationText = nearestStation
         ? `${nearestStation.marker.name}（${nearestStation.distance} m）`
@@ -129,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .replace(/\s+/g, "")         // 空白除去
         .trim();
 
-      // ★福井駅だけは「駅」を消さない（CSV側が福井駅なので）
+      // 福井駅だけは「駅」を消さない（CSV側が福井駅なので）
       if (key !== "福井駅") {
         key = key.replace(/駅$/, "");
       }

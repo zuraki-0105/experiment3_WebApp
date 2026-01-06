@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>飲食店マップ</title>
 
-    <!-- Leaflet CSS（integrityなし） -->
+
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
     <link rel="icon" href="data:,">
-    <!-- 自作CSS -->
+
     <link rel="stylesheet" href="/static/css/map.css" />
 </head>
 <body>
     <h1>飲食店マップ</h1>
 
-    <!-- 地図を置く場所 -->
-    <div id="map"></div>
 
-    <!-- フィルタ（必要なら） -->
+    <div id="map"></div>
 
     <div id="controls">
         <label><input type="checkbox" id="filter-convenience" checked> コンビニ</label>
@@ -33,7 +31,6 @@
         <label><input type="checkbox" id="filter-bus-stops"> バス停</label>
     </div>
 
-    <!-- 地図の下 -->
     <div id="station-timetable">
         <h2>最寄り駅の時刻表</h2>
         <div id="timetable-content">
@@ -42,10 +39,8 @@
     </div>
 
 
-    <!-- Leaflet JS（integrityなし） -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- 自作JS -->
     <script src="/static/js/findNear.js"></script>
     <script src="/static/js/classification.js"></script>
     <script src="/static/js/main.js"></script>
