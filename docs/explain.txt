@@ -1,0 +1,29 @@
+app.py
+    FastAPI を用いた Web アプリケーション全体のエントリーポイントとなるバックエンド制御ファイル
+
+routers/timetable.py
+    時刻表機能に関する API エンドポイントを定義するルーティングファイル
+
+services/timetable_service.py
+    鉄道時刻表データの読み込み、加工、および提供を行うサービス層ファイル
+
+templates/index.html
+    Web アプリのトップページ（入口画面）を構成する HTML テンプレート
+
+templates/map.html
+    地図表示および各種操作を行うアプリのメイン画面を構成する HTML テンプレート
+
+static/js/main.js
+    地図表示、データ取得、画面更新などを制御するクライアントサイドのメインスクリプト
+
+static/js/findNear.js
+    地図上の任意の地点から最も近いマーカーを算出する距離計算用ユーティリティスクリプト
+
+static/js/classification.js
+    店舗データの業種情報をもとにカテゴリ分類を行う判定ロジックファイル
+
+static/css/map.css
+    地図画面（map.html）におけるレイアウトおよび表示スタイルを定義するスタイルシート
+
+static/css/index.css
+    トップページ（index.html）専用のレイアウトおよび視覚的演出を定義するスタイルシート
