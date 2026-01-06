@@ -1,3 +1,4 @@
+// 座標から距離を計算
 window.findNearest = function(latlng, markers) {
   let nearest = null;
   let minDist = Infinity;
