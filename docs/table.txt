@@ -1,0 +1,27 @@
+restaurants
+    Column('id', Integer, primary_key=True, autoincrement=True),    #id
+    Column('name', String), #店名
+    Column('lat', Float), #緯度
+    Column('lng', Float), #経度
+    Column('address', String), #住所
+    Column('segment', String), #業態
+    Column('business_type', String) #営業の種類
+
+stations
+    Column('id', Integer, primary_key=True, autoincrement=True),    #id
+    Column('name', String), #駅名
+    Column('name_kana', String), #駅名（かな）
+    Column('address', String), #住所
+    Column('line', String), #路線
+    Column('company', String), #鉄道会社
+    Column('lat', Float), #緯度
+    Column('lng', Float) #経度
+
+bus_stops
+    Column('id', Integer, primary_key=True, autoincrement=True),    #id
+    Column('stop_no', Integer, nullable=True), #停留所番号
+    Column('stop_no_branch', Integer, nullable=True), #停留所番号（枝番）
+    Column('name', String), #停留所名
+    Column('lat', Float), #緯度
+    Column('lng', Float)    #経度
+
