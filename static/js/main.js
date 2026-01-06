@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const cate = classifyBySegment(raw);
       let cateStr = "";
 
+      // 日本語表示
       if(cate === "restaurant") cateStr = "レストラン";
       else if(cate === "drugstore") cateStr = "ドラッグストア";
       else if(cate === "convenience") cateStr = "コンビニ";
@@ -78,10 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
       else if(cate === "super") cateStr = "スーパー";
       else cateStr = "None";
 
+      //  ポップアップの表示・内容
       const marker = L.marker(ll).bindPopup(
-        `<b>${r.name ?? ""}</b><br>${r.address ?? ""}<br>(${cateStr})<br><br>最寄り駅　　  ： ${nearestStationText}<br>最寄りバス停  ： ${nearestBusStopText}`
+        `<b>${r.name ?? ""}</b><br>
+        ${r.address ?? ""}<br>
+        (${cateStr})<br><br>最寄り駅　　  ： ${nearestStationText}<br>
+        最寄りバス停  ： ${nearestBusStopText}`
       );
 
+      // クリック時
       marker.on("click", () => {
         if (nearestStation) {
           showStationTimetable(nearestStation.marker.stationName);
@@ -96,13 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("restaurant markers:", restaurantsMarkers.length);
   }
 
+  // 駅データを取得し、地図上にマーカーとして表示する
   async function loadStations() {
+
     const data = await fetchJson("/stations");
     const stations = data.stations ?? [];
 
     console.log("API stations count:", stations.length);
     console.log("stations[0] =", stations[0]);
 
+    // 駅のアイコン設定
     const icon = L.divIcon({
       html: "🚉",
       className: "",
@@ -113,7 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
     stationMarkers.forEach((m) => map.removeLayer(m));
     stationMarkers = [];
 
+    // マーカー生成
     stations.forEach((s, idx) => {
+
       const ll = toLatLng(s.lat, s.lng);
       if (!ll) {
         console.warn("stations invalid lat/lng:", idx, s);
@@ -121,10 +132,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const marker = L.marker(ll, { icon }).bindPopup(
-        `<b>${s.name ?? ""}</b><br>${s.line ?? ""}<br>${s.company ?? ""}`
+        `<b>${s.name ?? ""}</b><br>
+        ${s.line ?? ""}<br>
+        ${s.company ?? ""}`
       );
 
-      // ====== 駅名を保持して、クリックで時刻表取得 ======
+      // 時刻表API用のキーを作成
       let key = (s.name ?? "")
         .replace(/（.*?）/g, "")     // カッコ除去
         .replace(/\s+/g, "")         // 空白除去
@@ -138,11 +151,12 @@ document.addEventListener("DOMContentLoaded", () => {
       marker.stationName = key;
 
 
-
+      // マーカークリック時
       marker.on("click", async () => {
       const station = marker.stationName;
 
       try {
+          // くだり・のぼりの時刻表を取得
           const [kRes, nRes] = await Promise.all([
             fetchJson(`/timetable?station=${encodeURIComponent(station)}&direction=kudari`),
             fetchJson(`/timetable?station=${encodeURIComponent(station)}&direction=nobori`),
@@ -151,11 +165,13 @@ document.addEventListener("DOMContentLoaded", () => {
           const kudari = kRes.items ?? [];
           const nobori = nRes.items ?? [];
 
+          // 列車種別の変換
           function prettyTrainType(type) {
             if (type === "電") return "普通";
             return type;
           }
 
+          // 時刻表リストをHTML表示用に整形
           function render(list) {
             if (!list.length) return "（なし）";
             return list.slice(0, 30).map(x => {
@@ -174,7 +190,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .openPopup();
             return;
           }
-
+          
+          // 時刻表をポップアップに表示
           marker.bindPopup(
             `<b>${station}</b><br>` +
             `<div style="max-height:260px; overflow:auto; font-size:12px; line-height:1.4;">` +
@@ -192,6 +209,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       marker.name = s.name;
+
+      // 地図にマーカー追加
       marker.addTo(map);
       stationMarkers.push(marker);
     });
@@ -199,14 +218,16 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("station markers:", stationMarkers.length);
   }
 
-
+  // バス停データからマーカーを生成
   async function loadBusStops() {
+    // データ取得
     const data = await fetchJson("/bus_stops");
     const busStops = data.bus_stops ?? [];
 
     console.log("API bus_stops count:", busStops.length);
     console.log("bus_stops[0] =", busStops[0]);
 
+    // バス停アイコン設定
     const icon = L.divIcon({
       html: "🚌",
       className: "",
@@ -218,14 +239,15 @@ document.addEventListener("DOMContentLoaded", () => {
     busStopMarkers = [];
 
     busStops.forEach((b, idx) => {
+      // 緯度経度チェック
       const ll = toLatLng(b.lat, b.lng);
       if (!ll) {
         console.warn("bus_stops invalid lat/lng:", idx, b);
         return;
       }
 
+      // マーカーを作成
       const marker = L.marker(ll, { icon }).bindPopup(`<b>${b.name ?? ""}</b>`);
-      // addTo(map) は applyFilter が制御
       marker.name = b.name;
       busStopMarkers.push(marker);
     });
@@ -269,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // 時刻表をサイドパネルに表示
   async function showStationTimetable(stationName) {
     const container = document.getElementById("timetable-content");
     container.innerHTML = "読み込み中…";
@@ -303,6 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // 時刻表表示
       container.innerHTML = `
         <b>${stationName}</b><br><br>
         <b>くだり</b><br>${render(kudari)}<br><br>
@@ -316,8 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  // ====== チェックボックスにイベント追加 ======
-  // HTMLが「id=controls」でも「class=controls」でも拾えるように暫定対応
+  // チェックボックスにイベント追加
   document.querySelectorAll("#controls input, .controls input").forEach((cb) => {
     cb.addEventListener("change", applyFilter);
   });
